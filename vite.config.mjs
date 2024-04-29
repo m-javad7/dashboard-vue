@@ -6,6 +6,7 @@ import Layouts from 'vite-plugin-vue-layouts'
 import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import Pages from 'vite-plugin-pages'
 
 // Utilities
 import { defineConfig } from 'vite'
@@ -16,6 +17,7 @@ export default defineConfig({
   plugins: [
     VueRouter(),
     Layouts(),
+    Pages(),
     Vue({
       template: { transformAssetUrls }
     }),
@@ -62,6 +64,7 @@ export default defineConfig({
     ],
   },
   server: {
+    host:'192.168.100.153',
     port: 3000,
   },
 })

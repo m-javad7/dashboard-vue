@@ -1,90 +1,60 @@
 <template>
-    <v-container>
-      <!-- قسمت جستجو -->
-      <v-row>
-        <v-col cols="12">
-          <v-autocomplete
-            v-model="selectedPerson"
-            :items="personnelList"
-            item-text="name"
-            item-value="id"
-            label="جستجوی پرسنل"
-            @change="handleSearch"
-            outlined
-            dense
-          ></v-autocomplete>
-        </v-col>
-      </v-row>
-  
-      <!-- قسمت ورودی کد ملی و کد پرسنلی -->
-      <v-row>
-        <v-col cols="6">
-          <v-text-field
-            v-model="nationalCode"
-            label="کد ملی"
-            outlined
-            dense
-            readonly
-          ></v-text-field>
-        </v-col>
-        <v-col cols="6">
-          <v-text-field
-            v-model="personnelCode"
-            label="کد پرسنلی"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
-      </v-row>
-  
-      <!-- دکمه ثبت -->
-      <v-row>
-        <v-col cols="12">
-          <v-btn color="primary" @click="submitForm">ثبت</v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-  </template>
-  
-  <script>
-  export default {
-     name: 'Register',
-    data() {
-      return {
-        selectedPerson: null,
-        nationalCode: "",
-        personnelCode: "",
-        personnelList: [
-          { id: 1, name: "علی احمدی", nationalCode: "1234567890" },
-          { id: 2, name: "مریم رضایی", nationalCode: "0987654321" },
-        ],
-      };
+  <v-container>
+    <v-form ref="form" @submit.prevent="onSubmit">
+      <v-text-field
+        label="کد ملی"
+        v-model="nationalCode"
+        readonly
+      ></v-text-field>
+
+      <v-text-field
+        label="نام پرسنل"
+        v-model="employeeName"
+        readonly
+      ></v-text-field>
+
+      <v-text-field
+        label="یوزر"
+        v-model="username"
+        :rules="[required]"
+        hint="لطفاً یوزر خود را وارد کنید"
+        persistent-hint
+      ></v-text-field>
+
+      <v-btn color="primary" type="submit">ثبت</v-btn>
+    </v-form>
+  </v-container>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      nationalCode: "1234567890", 
+      employeeName: "محمد جواد ",
+      username: "",
+    };
+  },
+  methods: {
+    required(value) {
+      return value ? true : "این فیلد باید پر شود";
     },
-    methods: {
-      handleSearch(selected) {
-        // پیدا کردن شخص بر اساس انتخاب
-        const person = this.personnelList.find((p) => p.id === selected);
-        if (person) {
-          this.nationalCode = person.nationalCode; // پر کردن کد ملی
-        }
-      },
-      submitForm() {
-        // منطق ثبت داده‌ها
-        console.log("اطلاعات ثبت شده:");
-        console.log("کد ملی:", this.nationalCode);
-        console.log("کد پرسنلی:", this.personnelCode);
-      },
+    onSubmit() {
+      if (this.$refs.form.validate()) {
+        // منطقی برای ارسال فرم یا انجام کاری دیگر
+        console.log("فرم معتبر است و ارسال شد", {
+          nationalCode: this.nationalCode,
+          employeeName: this.employeeName,
+          username: this.username,
+        });
+      } else {
+        console.log("فرم نامعتبر است");
+      }
     },
-  };
-  </script>
-  
-  <style scoped>
-  .v-container {
-    padding-top: 20px;
-  }
-  
-  .v-text-field {
-    font-weight: bold;
-  }
-  </style>
-  
+  },
+};
+</script>
+
+<style scoped>
+/* استایل‌های اضافی در صورت نیاز */
+</style>

@@ -55,6 +55,7 @@ export default {
       links: [
         { icon: "mdi-view-dashboard", text: "داشبورد", route: "/" },
         { icon: "mdi-folder", text: "ایجاد پرسنل", route: "/MainLayout" },
+        { icon: "mdi-account", text: "ثبت پرسنل", route: "/register" },
         { icon: "mdi-account-group", text: "سایر", route: "/dashboard" },
       ],
     };

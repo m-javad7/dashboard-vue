@@ -6,7 +6,8 @@
 
 // Plugins
 import { registerPlugins } from '@/plugins'
-
+import User from "@/config/User";
+window.User=User;
 // Components
 import App from './App.vue'
 
