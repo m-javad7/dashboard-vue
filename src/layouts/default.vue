@@ -1,41 +1,66 @@
-
-
 <template>
   <v-app>
     <v-app-bar app color="primary" dark>
-      <!-- Toggle Drawer Button -->
       <v-app-bar-nav-icon @click="toggleDrawer" />
       <v-toolbar-title class="text-uppercase font-weight-bold">مروارید</v-toolbar-title>
       <v-spacer />
-
       <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn dark v-bind="attrs" v-on="on">
-            <v-icon>mdi-account-circle</v-icon>
+        <template v-slot:activator="{ attrs, on }">
+          <v-btn v-bind="attrs" v-on="on" dark>
+            <v-icon size="25px">mdi-account-circle</v-icon>
           </v-btn>
         </template>
-        <v-list>
-          <v-list-item v-for="link in links" :key="link.text" router :to="link.route">
-            <v-list-item-title>{{ link.text }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
       </v-menu>
-
       <v-btn text @click="signOut">
         <span>خروج</span>
         <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-app-bar>
 
-    <!-- Navigation Drawer -->
-    <v-navigation-drawer app v-model="drawer" right>
+    <v-navigation-drawer
+      :permanent="isDesktop"
+      app
+      v-model="drawer"
+      right
+      class="bg-grey-lighten-5"
+    >
       <v-list>
-        <v-list-item v-for="link in links" :key="link.text" router :to="link.route">
-          <v-list-item-action>
-            <v-icon class="white--text">{{ link.icon }}</v-icon>
-            <v-list-item-title class="white--text">{{ link.text }}</v-list-item-title>
-          </v-list-item-action>
-        </v-list-item>
+        <v-list-item
+          :class="{ 'bg-blue-lighten-5': isRouteActive('dashboard') }"
+          prepend-icon="mdi-view-dashboard"
+          rounded="shaped"
+          title="داشبورد"
+          @click="navigateTo('dashboard')"
+        ></v-list-item>
+
+        <v-list-item
+          :class="{ 'bg-blue-lighten-5': isRouteActive('People') }"
+          prepend-icon="mdi-account-hard-hat"
+          rounded="shaped"
+          title="ثبت اشخاص"
+          @click="navigateTo('People')"
+        ></v-list-item>
+
+        <v-list-group v-for="group in menuGroups" :key="group.title" color="primary">
+          <template v-slot:activator="{ props }">
+            <v-list-item
+              v-bind="props"
+              :prepend-icon="group.icon"
+              rounded="shaped"
+              :title="group.title"
+            ></v-list-item>
+          </template>
+
+          <v-list-item
+            v-for="item in group.items"
+            :key="item.title"
+            :class="{ 'bg-blue-lighten-5': isRouteActive(item.route) }"
+            :prepend-icon="item.icon"
+            :title="item.title"
+            @click="navigateTo(item.route)"
+            rounded="shaped"
+          ></v-list-item>
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
 
@@ -48,52 +73,58 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+import { useDisplay } from 'vuetify'; 
+
 export default {
   data() {
     return {
-      drawer: true, // Drawer starts in an open state
-      links: [
-        { icon: "mdi-view-dashboard", text: "داشبورد", route: "/" },
-        { icon: "mdi-folder", text: "ایجاد پرسنل", route: "/MainLayout" },
-        { icon: "mdi-account", text: "ثبت پرسنل", route: "/register" },
-        { icon: "mdi-account-group", text: "سایر", route: "/dashboard" },
+      drawer: true,
+      menuGroups: [
+        {
+          title: 'ایجاد کاربر',
+          icon: 'mdi-account-multiple-plus',
+          items: [
+            { title: 'ثبت پرسنل', icon: 'mdi-account-details', route: 'Personnel' },
+            { title: 'ثبت نام کاربری', icon: 'mdi-account-key', route: 'register' },
+          ],
+        },
+        {
+          title: 'تنظیمات',
+          icon: 'mdi-cog-outline',
+          items: [
+            { title: 'منو3', icon: 'mdi-home', route: 'test' },
+          ],
+        },
       ],
     };
   },
+  computed: {
+    isDesktop() {
+      const { width } = useDisplay();
+      return width.value > 999;
+    },
+  },
   methods: {
     toggleDrawer() {
-      this.drawer = !this.drawer; // Toggles the drawer open/closed
+      this.drawer = !this.drawer;
     },
     signOut() {
-      console.log("Signing out...");
-      // Logic for signing out the user
+      localStorage.removeItem('authToken');
+      this.$router.push('/login');
+    },
+    navigateTo(route) {
+      this.$router.push(`/${route}`);
+    },
+    isRouteActive(route) {
+      return this.$route.path === `/${route}`;
     },
   },
 };
 </script>
 
-
-
 <style scoped>
-.v-app-bar {
-  background-color: #1976d2; /* Background color for the app bar */
-}
-
-.v-navigation-drawer {
-  transition: transform 0.3s; /* Adding a smooth transition to the drawer */
-}
-
-.v-btn {
-  font-weight: bold; /* Making text bold for buttons */
-}
-
-.v-icon {
-  font-size: 24px; /* Increasing icon size for better visibility */
-}
-
-.v-list-item {
-  padding: 16px; /* Adding padding for spacing between list items */
+.active-item {
+  background-color: lightgray; /* رنگ آیتم‌های فعال */
 }
 </style>
-
-

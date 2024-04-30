@@ -14,10 +14,9 @@
       ></v-text-field>
 
       <v-text-field
-        label="یوزر"
+        label="نام کاربری"
         v-model="username"
         :rules="[required]"
-        hint="لطفاً یوزر خود را وارد کنید"
         persistent-hint
       ></v-text-field>
 

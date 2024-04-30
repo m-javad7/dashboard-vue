@@ -8,3 +8,12 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+@font-face {
+    font-family: 'iransans';
+    src: url('/src/assets/fonts/IRANSansXFaNum-Regular.woff');
+    // src: url('/src/assets/fonts/Iranian\ Sans.ttf') format('ttf'),
+ }
+
+*{
+    font-family: 'iransans',
+}
