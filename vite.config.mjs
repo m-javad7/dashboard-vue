@@ -64,7 +64,7 @@ export default defineConfig({
     ],
   },
   server: {
-    host:'192.168.100.153',
     port: 3000,
   },
+  
 })

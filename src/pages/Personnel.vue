@@ -8,7 +8,7 @@
           :items="personnelList"
           item-text="name"
           item-value="id"
-          label="جستجوی پرسنل"
+          label="🔎جستجوی پرسنل"
           @change="handleSearch"
           outlined
           dense
@@ -18,7 +18,7 @@
 
     <!-- قسمت ورودی کد ملی و کد پرسنلی -->
     <v-row>
-      <v-col cols="6">
+      <v-col cols="12" md="8">
         <v-text-field
           v-model="nationalCode"
           label="کد ملی"
@@ -28,17 +28,17 @@
           model-value="13234434"
         ></v-text-field>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="12" md="8">
         <v-text-field
           v-model="personnelCode"
           label="کد پرسنلی"
           outlined
           dense
+        :rules="[required]"
         ></v-text-field>
       </v-col>
     </v-row>
 
-    <!-- دکمه ثبت -->
     <v-row>
       <v-col cols="12">
         <v-btn color="primary" @click="submitForm">ثبت</v-btn>
@@ -49,31 +49,23 @@
 
 <script>
 export default {
-   name: 'Register',
   data() {
     return {
       selectedPerson: null,
-      nationalCode: "",
-      personnelCode: "",
-      personnelList: [
-        { id: 1, name: "علی احمدی", nationalCode: "1234567890" },
-        { id: 2, name: "مریم رضایی", nationalCode: "0987654321" },
-      ],
+      personnelList: [], // لیست پرسنل
+      nationalCode: '', // کد ملی
+      personnelCode: '', // کد پرسنلی
     };
   },
   methods: {
-    handleSearch(selected) {
-      // پیدا کردن شخص بر اساس انتخاب
-      const person = this.personnelList.find((p) => p.id === selected);
-      if (person) {
-        this.nationalCode = person.nationalCode; // پر کردن کد ملی
-      }
+    handleSearch(value) {
+      console.log(`جستجو برای: ${value}`);
     },
     submitForm() {
-      // منطق ثبت داده‌ها
-      console.log("اطلاعات ثبت شده:");
-      console.log("کد ملی:", this.nationalCode);
-      console.log("کد پرسنلی:", this.personnelCode);
+      console.log('فرم ثبت شد');
+    },
+    required(value) {
+      return value ? true : "کد پرسنلی اختصاص داده نشده!";
     },
   },
 };

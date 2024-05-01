@@ -10,7 +10,7 @@ import User from "@/config/User";
 window.User=User;
 // Components
 import App from './App.vue'
-
+import router from './router';
 // Composables
 import { createApp } from 'vue'
 

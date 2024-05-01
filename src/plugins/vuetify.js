@@ -8,7 +8,6 @@
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import { fa } from 'vuetify/locale'
-
 // Composables
 import { createVuetify } from 'vuetify'
 
