@@ -50,15 +50,15 @@ export default {
         const response = await fetch(`${api}/api/login`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json', // ارسال داده‌ها به‌عنوان JSON
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(loginData), // داده‌های فرم
+          body: JSON.stringify(loginData),
         });
 
         if (!response.ok) {
           throw new Error('نام کاربری یا رمز عبور اشتباه است.');
         }
-
+        
         const data = await response.json();
 
         const token = data.access_token;
@@ -91,7 +91,7 @@ export default {
 }
 </style>
 
-<!-- 
+<!--
 
 <template>
   <v-container class="fill-height d-flex justify-center align-center">
@@ -125,9 +125,8 @@ export default {
 </template>
 
 <script>
-import axios from 'axios';  // وارد کردن axios
-import { api } from "/src/config/api";  // استفاده از متغیر api
-
+import axios from 'axios';
+import { api } from "/src/config/api";
 export default {
   data() {
     return {
@@ -135,8 +134,10 @@ export default {
       username: '',
       password: '',
       errorMessage: '',
+      form: {username:'',password:''}
     };
   },
+
   computed: {
     usernameRules() {
       return [
@@ -151,38 +152,36 @@ export default {
     },
   },
   methods: {
-    async login() {
-      try {
-        if (!this.$refs.form.validate()) {
-          return;
+        login() {
+            axios.post( api+'/api/login', this.form)
+                .then(response => {
+                  console.log(response)
+                  debugger
+                    if (response){
+                    console.log(response)
+                    User.responseAfterLogin(response, this.form.username, this.form.password);
+                    // this.$router.push({name: ''});
+                    //     toast.success(response.data.result.name + " خوش آمدی ", {
+                    //         position: toast.POSITION.TOP_CENTER,
+                    //     });
+
+                        location.reload();
+                    }
+
+                })
+                .catch(error => {
+                  debugger
+                    console.log(error)
+                    this.errors = error.response;
+
+                })
+
+        },
+        fillForm() {
+            this.form.username = localStorage.getItem("username");
+            this.form.password = localStorage.password;
         }
-
-        const loginData = {
-          username: this.username,
-          password: this.password,
-        };
-
-        const response = await axios.post(`${api}/api/login`, loginData, {
-          headers: {
-            'authorization': 'Bearer ' + localStorage.getItem('token'),
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (response.status >= 400) {
-          throw new Error('نام کاربری یا رمز عبور اشتباه است.');
-        }
-
-        const data = response.data;
-
-        // ریدایرکت به صفحه اصلی پس از ورود موفق
-        this.$router.push('/');
-      } catch (error) {
-        this.errorMessage = error.message;
-      }
-    },
-  },
+    }
 };
 </script>
 
