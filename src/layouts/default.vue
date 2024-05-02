@@ -5,13 +5,13 @@
       <v-toolbar-title class="text-uppercase font-weight-bold">مروارید</v-toolbar-title>
       <v-spacer />
       <v-menu offset-y>
-        <template v-slot:activator="{ attrs, on }">
-          <v-btn v-bind="attrs" v-on="on" dark>
+        <template v-slot:activator="{ attrs }">
+          <v-btn v-bind="attrs" dark>
             <v-icon size="25px">mdi-account-circle</v-icon>
           </v-btn>
         </template>
       </v-menu>
-      <v-btn text @click="signOut">
+      <v-btn text @click="Logout">
         <span>خروج</span>
         <v-icon>mdi-logout</v-icon>
       </v-btn>
@@ -73,9 +73,10 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { computed } from 'vue';
-import { useDisplay } from 'vuetify'; 
-
+import { useDisplay } from 'vuetify';
+import { api } from '@/config/api';
 export default {
   data() {
     return {
@@ -85,8 +86,9 @@ export default {
           title: 'ایجاد کاربر',
           icon: 'mdi-account-multiple-plus',
           items: [
-            { title: 'ثبت پرسنل', icon: 'mdi-account-details', route: 'Personnel' },
-            { title: 'ثبت نام کاربری', icon: 'mdi-account-key', route: 'register' },
+            { title: 'ثبت نام', icon: 'mdi-account', route: 'register/RegisterUser' },
+            { title: 'ثبت پرسنل', icon: 'mdi-account-details', route: 'register/Personnel' },
+            { title: 'ثبت نام کاربری', icon: 'mdi-account-key', route: 'register/User' },
           ],
         },
         {
@@ -109,9 +111,17 @@ export default {
     toggleDrawer() {
       this.drawer = !this.drawer;
     },
-    signOut() {
-      localStorage.removeItem('authToken');
-      this.$router.push('/login');
+    async Logout() {
+      try {
+        // ارسال درخواست خروج به سرور
+        await axios.post(api+'/api/auth/logout');
+
+        // پاک کردن توکن و هدایت به صفحه ورود
+        localStorage.removeItem('authToken');
+        this.$router.push('/login');
+      } catch (error) {
+        console.error('خطا در خروج:', error);
+      }
     },
     navigateTo(route) {
       this.$router.push(`/${route}`);
@@ -125,6 +135,6 @@ export default {
 
 <style scoped>
 .active-item {
-  background-color: lightgray; /* رنگ آیتم‌های فعال */
+  background-color: lightgray;
 }
 </style>

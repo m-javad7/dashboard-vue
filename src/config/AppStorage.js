@@ -8,7 +8,6 @@ class AppStorage {
 
     storeUser(user) {
       debugger
-
         localStorage.setItem('user', user);
     }
 
@@ -19,7 +18,6 @@ class AppStorage {
 
     storeUsername(username) {
       debugger
-
         localStorage.setItem('username', username);
     }
 
