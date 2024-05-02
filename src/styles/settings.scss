@@ -14,6 +14,28 @@
     // src: url('/src/assets/fonts/Iranian\ Sans.ttf') format('ttf'),
  }
 
-*{
-    font-family: 'iransans',
+* {
+    font-family: 'iransans', sans-serif;
+}
+
+/* WebKit Scrollbar Styles */
+
+/* Width of the scrollbar */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+/* Track (background of scrollbar) */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Thumb (scrolling part of the scrollbar) */
+::-webkit-scrollbar-thumb {
+    background: #a3a3a3;
+}
+
+/* Thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #797878;
 }

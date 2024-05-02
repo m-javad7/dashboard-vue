@@ -2,58 +2,79 @@
   <v-container>
     <!-- گروه رادیوباکس برای انتخاب حقیقی یا حقوقی -->
     <v-radio-group v-model="type" row>
-      <v-radio label="حقیقی" value="حقیقی" color="primary" />
-      <v-radio label="حقوقی" value="حقوقی" color="primary" />
+      <v-radio label="حقیقی" value="0" color="primary" />
+      <v-radio label="حقوقی" value="1" color="primary" />
     </v-radio-group>
 
     <v-form ref="form" v-model="valid" md="pa-6">
       <!-- ورودی‌های برای فرد حقیقی -->
-      <v-row v-if="type === 'حقیقی'">
+      <v-row v-if="type === '0'">
         <v-col cols="12" md="6">
-          <v-text-field label="نام" v-model="firstName" :rules="nameRules" required />
+          <v-text-field label="نام" v-model="first_name" :rules="nameRules" required />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="نام خانوادگی" v-model="lastName" :rules="nameRules" required />
+          <v-text-field label="نام خانوادگی" v-model="last_name" :rules="nameRules" required />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="کد ملی" v-model="nationalCode" :rules="nationalCodeRules" maxlength="10" required />
+          <v-text-field label="کد ملی" v-model="national_code" :rules="nationalCodeRules" maxlength="10" required />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="تاریخ تولد" hint="تاریخ باید به فرمت 1400/12/29" v-model="birthDate" :rules="DateRules" required />
+          <v-text-field label="شناسنامه" v-model="id_number" :rules="nameRules" required />
         </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field label="تاریخ تولد" hint="تاریخ باید به فرمت 1400/12/29" v-model="date_of_birth"  />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field label="آدرس" v-model="address" :rules="nameRules" required />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field label="کدپستی" v-model="postal_code" :rules="nameRules" required />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field label="شماره موبایل" v-model="phone_number" :rules="nameRules" required />
+        </v-col>
+        <v-col cols="12" md="6" class="d-flex">
+          <input-photo  v-model="files"/>
+        </v-col>
+        <!-- <v-col cols="12" md="6">
+          <v-text-field label="ایمیل" v-model="firstName" :rules="nameRules" required />
+        </v-col> -->
       </v-row>
 
       <!-- ورودی‌های برای فرد حقوقی -->
-      <v-row v-if="type === 'حقوقی'">
+      <v-row v-if="type === '1'">
         <v-col cols="12" md="6">
-          <v-text-field label="نام شرکت" v-model="companyName" required />
+          <v-text-field label="نام شرکت" v-model="company_name" required />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="تلفن تماس" v-model="Phone" />
+          <v-text-field label="تلفن تماس" v-model="phone_number" />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="نام مدیرعامل" v-model="ceoName" />
+          <v-text-field label="نام مدیرعامل" v-model="ceo_name" />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="نام رابط شرکت" v-model="CompanyContact" />
+          <v-text-field label="نام رابط شرکت" v-model="company_contact_name" />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="تلفن رابط شرکت" v-model="CompanyPhone" />
+          <v-text-field label="تلفن رابط شرکت" v-model="company_contact_phone" />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="کد اقتصادی" v-model="EconomicCode" />
+          <v-text-field label="کد اقتصادی" v-model="economic_code" />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="شناسه ملی" v-model="NationalID" />
+          <v-text-field label="شناسه ملی" v-model="national_code" />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="شماره ثبت شرکت" v-model="CompanyRegistrationNumber" />
+          <v-text-field label="شماره ثبت شرکت" v-model="registration_number" />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="تاریخ تاسیس" hint="تاریخ باید به فرمت 1400/12/29" v-model="DateEstablishment" :rules="DateRules" />
+          <v-text-field label="تاریخ تاسیس" hint="تاریخ باید به فرمت 1400/12/29" v-model="date_of_establishment" :rules="DateRules" />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="آدرس/کدپستی" v-model="economicID" />
+          <v-text-field label="کدپستی" v-model="postal_code" />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field label="آدرس" v-model="address" />
         </v-col>
       </v-row>
 
@@ -66,30 +87,37 @@
 
 <script>
 import axios from 'axios';
+// import api from '@/config/api'
 import dayjs from 'dayjs';
 import jalali from 'dayjs-jalali';
+import InputPhoto from '@/components/InputPhoto.vue';
 
 dayjs.extend(jalali);
 
 export default {
+  components: { InputPhoto },
   data() {
     return {
-      type: 'حقیقی',
-      firstName: '',
-      lastName: '',
-      nationalCode: '',
-      birthDate: '',
-
-      companyName: '',
-      phone: '',
-      ceoName: '',
-      economicID: '',
-      CompanyContact: '',
-      CompanyPhone: '',
-      EconomicCode: '',
-      NationalID: '',
-      CompanyRegistrationNumber: '',
-      DateEstablishment: '',
+      type: '0',  // حالت پیش‌فرض
+      valid: false,
+      // داده‌های برای فرد حقیقی
+      first_name: '',
+      last_name: '',
+      national_code: '',
+      id_number: '',
+      date_of_birth: '',
+      address: '',
+      postal_code: '',
+      phone_number: '',
+      files: [],
+      // داده‌های برای فرد حقوقی
+      company_name: '',
+      ceo_name: '',
+      company_contact_name: '',
+      company_contact_phone: '',
+      economic_code: '',
+      registration_number: '',
+      date_of_establishment: '',
     };
   },
   computed: {
@@ -121,30 +149,41 @@ export default {
         return;
       }
 
+      // ایجاد FormData و اضافه کردن داده‌ها
       const formData = {
         type: this.type,
-        firstName: this.firstName,
-        lastName: this.lastName,
-        nationalCode: this.nationalCode,
-        birthDate: this.birthDate,
-        companyName: this.companyName,
+        first_name: this.first_name,
+        last_name: this.last_name,
+        national_code: this.national_code,
+        certificate_number: this.certificate_number,
+        birth_date: this.birth_date,
+        address: this.address,
+        postal_code: this.postal_code,
+        mobile_number: this.mobile_number,
+        company_name: this.company_name,
         phone: this.phone,
-        ceoName: this.ceoName,
-        economicID: this.economicID,
-        CompanyContact: this.CompanyContact,
-        CompanyPhone: this.CompanyPhone,
-        EconomicCode: this.EconomicCode,
-        NationalID: this.NationalID,
-        CompanyRegistrationNumber: this.CompanyRegistrationNumber,
-        DateEstablishment: this.DateEstablishment,
+        ceo_name: this.ceo_name,
+        contact_name: this.contact_name,
+        contact_phone: this.contact_phone,
+        economic_code: this.economic_code,
+        registration_number: this.registration_number,
+        date_of_establishment: this.date_of_establishment,
+        files: this.files,
       };
+      console.log(formData)
 
       try {
-        const response = await axios.post('/api/register', formData);
+        const response = await axios.post('http://192.168.100.152:8080/api/people', formData, {
+          headers: {
+                        'authorization': 'Bearer ' + localStorage.getItem('authToken'),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+        });
 
-        console.log('داده‌ها با موفقیت ارسال شدند:', response.data);
+        console.log('اطلاعات با موفقیت ارسال شد:', response.data);
       } catch (error) {
-        console.error('خطا در ارسال داده‌ها:', error);
+        console.error('خطا در ارسال اطلاعات:', error);
       }
     },
   },

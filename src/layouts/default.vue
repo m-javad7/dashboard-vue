@@ -3,6 +3,13 @@
     <v-app-bar app color="primary" dark>
       <v-app-bar-nav-icon @click="toggleDrawer" />
       <v-toolbar-title class="text-uppercase font-weight-bold">مروارید</v-toolbar-title>
+      <!-- <v-card>
+    <v-img
+      height="200px"
+      :src="logo"
+      alt="Logo Image"
+    ></v-img>
+  </v-card> -->
       <v-spacer />
       <v-menu offset-y>
         <template v-slot:activator="{ attrs }">
@@ -17,49 +24,34 @@
       </v-btn>
     </v-app-bar>
 
-    <v-navigation-drawer
-      :permanent="isDesktop"
-      app
-      v-model="drawer"
-      right
-      class="bg-grey-lighten-5"
-    >
+    <v-navigation-drawer :permanent="isDesktop" app v-model="drawer" right class="bg-grey-lighten-5" :width="280">
       <v-list>
-        <v-list-item
-          :class="{ 'bg-blue-lighten-5': isRouteActive('dashboard') }"
-          prepend-icon="mdi-view-dashboard"
-          rounded="shaped"
-          title="داشبورد"
-          @click="navigateTo('dashboard')"
-        ></v-list-item>
+        <!-- منو اصلی آیتم ها بئون زیرگروه-->
+        <v-list-item :class="{ 'bg-blue-grey-lighten-4': isRouteActive('dashboard') }" prepend-icon="mdi-view-dashboard"
+          rounded="shaped" title="داشبورد" @click="navigateTo('dashboard')" />
 
-        <v-list-item
-          :class="{ 'bg-blue-lighten-5': isRouteActive('People') }"
-          prepend-icon="mdi-account-hard-hat"
-          rounded="shaped"
-          title="ثبت اشخاص"
-          @click="navigateTo('People')"
-        ></v-list-item>
-
-        <v-list-group v-for="group in menuGroups" :key="group.title" color="primary">
+        <!-- گروه منوها -->
+        <v-list-group v-for="(group, index) in menuGroups" :key="group.title" color="primary"
+          v-model="groupExpanded[index]">
           <template v-slot:activator="{ props }">
-            <v-list-item
-              v-bind="props"
-              :prepend-icon="group.icon"
-              rounded="shaped"
-              :title="group.title"
-            ></v-list-item>
+            <v-list-item v-bind="props" :prepend-icon="group.icon" rounded="shaped" :title="group.title" />
           </template>
 
-          <v-list-item
-            v-for="item in group.items"
-            :key="item.title"
-            :class="{ 'bg-blue-lighten-5': isRouteActive(item.route) }"
-            :prepend-icon="item.icon"
-            :title="item.title"
-            @click="navigateTo(item.route)"
-            rounded="shaped"
-          ></v-list-item>
+          <v-list-item v-for="item in group.items" :key="item.title"
+            :class="{ 'bg-blue-grey-lighten-4': isRouteActive(item.route) }" :prepend-icon="item.icon"
+            :title="item.title" @click="navigateTo(item.route)" rounded="shaped" />
+
+          <!-- زیرمنو -->
+          <v-list-group v-for="(subGroup, subIndex) in group.subGroups" :key="subGroup.title" color="primary"
+            class="bg-grey-lighten-3" v-model="subGroupExpanded[subIndex]">
+            <template v-slot:activator="{ props }">
+              <v-list-item v-bind="props" :prepend-icon="subGroup.icon" rounded="shaped" :title="subGroup.title" />
+            </template>
+
+            <v-list-item v-for="subItem in subGroup.items" :key="subItem.title"
+              :class="{ 'bg-blue-grey-lighten-4': isRouteActive(subItem.route) }" :prepend-icon="subItem.icon"
+              :title="subItem.title" @click="navigateTo(subItem.route)" rounded="shaped" />
+          </v-list-group>
         </v-list-group>
       </v-list>
     </v-navigation-drawer>
@@ -74,32 +66,89 @@
 
 <script>
 import axios from 'axios';
-import { computed } from 'vue';
+import { computed, reactive } from 'vue';
 import { useDisplay } from 'vuetify';
 import { api } from '@/config/api';
+// import logo from '../assets/Images/logo_mor'
 export default {
   data() {
     return {
+      // logo,
       drawer: true,
       menuGroups: [
         {
-          title: 'ایجاد کاربر',
+          title: 'مدیریت اشخاص',
           icon: 'mdi-account-multiple-plus',
-          items: [
-            { title: 'ثبت نام', icon: 'mdi-account', route: 'register/RegisterUser' },
-            { title: 'ثبت پرسنل', icon: 'mdi-account-details', route: 'register/Personnel' },
-            { title: 'ثبت نام کاربری', icon: 'mdi-account-key', route: 'register/User' },
+          items: [],
+          subGroups: [
+            {
+              title: 'اشخاص',
+              icon: 'mdi-account-multiple',
+              items: [
+                { title: 'ثبت', icon: 'mdi-plus-box', route: 'People' },
+                { title: 'لیست', icon: 'mdi-folder-plus', route: 'ListPeople' },
+              ],
+            },
+            {
+              title: 'پرسنلی',
+              icon: 'mdi-card-account-details-outline',
+              items: [
+                { title: 'ثبت', icon: 'mdi-plus-box', route: 'register/Personnel' },
+                { title: 'لیست', icon: 'mdi-folder-plus', route: 'ListPersonnel' },
+              ],
+            },
+            {
+              title: 'کاربران',
+              icon: 'mdi-account-key',
+              items: [
+                { title: 'ثبت', icon: 'mdi-plus-box', route: 'register/User' },
+                { title: 'لیست', icon: 'mdi-folder-plus', route: 'ListUsers' },
+              ],
+            },
           ],
         },
         {
-          title: 'تنظیمات',
+          title: 'لاگ‌ها',
+          icon: 'mdi-alert-octagon-outline',
+          items: [
+            { title: 'کاربران', icon: 'mdi-account-group', route: 'Log' },
+          ],
+        },
+        {
+          title: 'واحدهای کاری',
+          icon: 'mdi-office-building-marker-outline',
+          items: [
+            { title: 'ثبت', icon: 'mdi-account-check', route: 'WorkUnits' },
+            { title: 'لیست', icon: 'mdi-list-status', route: 'ListUnits' },
+          ],
+        },
+        {
+          title: 'مدیریت دسترسی‌ها',
           icon: 'mdi-cog-outline',
           items: [
-            { title: 'منو3', icon: 'mdi-home', route: 'test' },
+            { title: 'دسترسی نرم‌افزار', icon: 'mdi-key', route: 'ManSoftware' },
+          ],
+          subGroups: [
+            {
+              title: 'گروه‌های دسترسی',
+              icon: 'mdi-folder',
+              items: [
+                { title: 'ایجاد', icon: 'mdi-plus-box', route: 'AccessGroups' },
+                { title: 'انتساب', icon: 'mdi-folder-plus', route: 'Attribution' },
+              ],
+            },
           ],
         },
       ],
+      groupExpanded: reactive([]),  // برای مدیریت وضعیت باز و بسته شدن گروه ها استفاده می شود
+      subGroupExpanded: reactive([]), //برای زیرمنوها
     };
+  },
+  mounted() {
+    this.groupExpanded = this.menuGroups.map(() => false);
+    this.subGroupExpanded = this.menuGroups.flatMap(group =>
+      group.subGroups ? group.subGroups.map(() => false) : []
+    );
   },
   computed: {
     isDesktop() {
@@ -113,10 +162,7 @@ export default {
     },
     async Logout() {
       try {
-        // ارسال درخواست خروج به سرور
-        await axios.post(api+'/api/auth/logout');
-
-        // پاک کردن توکن و هدایت به صفحه ورود
+        await axios.post(api + '/api/auth/logout');
         localStorage.removeItem('authToken');
         this.$router.push('/login');
       } catch (error) {
@@ -134,7 +180,7 @@ export default {
 </script>
 
 <style scoped>
-.active-item {
-  background-color: lightgray;
+.v-list-group__items .v-list-item {
+  padding-inline-start: calc(1px + var(--indent-padding)) !important;
 }
 </style>
