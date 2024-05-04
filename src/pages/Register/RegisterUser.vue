@@ -53,7 +53,7 @@ export default {
           username: this.form.username,
           password: this.form.password,
         });
-
+        console.log(response)
         // پیام موفقیت‌آمیز
         this.snackbar.message = 'ثبت نام موفقیت‌آمیز بود';
         this.snackbar.color = 'success';
@@ -61,10 +61,11 @@ export default {
 
       } catch (error) {
         // پیام خطا
-        this.snackbar.message = 'خطا در ثبت کاربر';
+        this.snackbar.message = (error.response.data.message) || 'خطا در ثبت کاربر';
         if (error.response) {
           this.snackbar.message = this.snackbar.message;
         }
+
         this.snackbar.color = 'error';
         this.snackbar.show = true;
       }
