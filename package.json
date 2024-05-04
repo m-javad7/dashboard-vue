@@ -16,7 +16,7 @@
     "dayjs-jalali": "^0.0.2",
     "roboto-fontface": "*",
     "vue": "^3.4.0",
-    "vuetify": "^3.5.0"
+    "vuetify": "^3.6.3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

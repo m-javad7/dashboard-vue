@@ -85,8 +85,8 @@ export default {
               title: 'اشخاص',
               icon: 'mdi-account-multiple',
               items: [
-                { title: 'ثبت', icon: 'mdi-plus-box', route: 'People' },
-                { title: 'لیست', icon: 'mdi-folder-plus', route: 'ListPeople' },
+                { title: 'ثبت', icon: 'mdi-plus-box', route: 'People/People' },
+                { title: 'لیست', icon: 'mdi-folder-plus', route: 'People/ListPeople' },
               ],
             },
             {
@@ -94,7 +94,7 @@ export default {
               icon: 'mdi-card-account-details-outline',
               items: [
                 { title: 'ثبت', icon: 'mdi-plus-box', route: 'register/Personnel' },
-                { title: 'لیست', icon: 'mdi-folder-plus', route: 'ListPersonnel' },
+                { title: 'لیست', icon: 'mdi-folder-plus', route: 'Personnel/ListPersonnel' },
               ],
             },
             {

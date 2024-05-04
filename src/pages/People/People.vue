@@ -2,8 +2,8 @@
   <v-container>
     <!-- گروه رادیوباکس برای انتخاب حقیقی یا حقوقی -->
     <v-radio-group v-model="type" row>
-      <v-radio label="حقیقی" value="حقیقی" color="primary" />
-      <v-radio label="حقوقی" value="حقوقی" color="primary" />
+      <v-radio label="حقیقی" value="0" color="primary" />
+      <v-radio label="حقوقی" value="1" color="primary" />
     </v-radio-group>
 
     <v-form ref="form" v-model="valid" md="pa-6">
@@ -22,7 +22,11 @@
           <v-text-field label="شناسنامه" v-model="id_number" :rules="nameRules" required />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="تاریخ تولد" hint="تاریخ باید به فرمت 1400/12/29" v-model="date_of_birth"  />
+          <v-date-input label="تاریخ تولد" 
+          prepend-inner-icon="$calendar"
+          prepend-icon=""
+          ></v-date-input>
+
         </v-col>
         <v-col cols="12" md="6">
           <v-text-field label="آدرس" v-model="address" :rules="nameRules" required />
@@ -33,7 +37,7 @@
         <v-col cols="12" md="6">
           <v-text-field label="شماره موبایل" v-model="phone_number" :rules="nameRules" required />
         </v-col>
-        <v-col cols="12" md="6" class="d-flex">
+        <v-col cols="12" md="6">
           <input-photo  v-model="files"/>
         </v-col>
         <!-- <v-col cols="12" md="6">
@@ -68,8 +72,10 @@
           <v-text-field label="شماره ثبت شرکت" v-model="registration_number" />
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field label="تاریخ تاسیس" hint="تاریخ باید به فرمت 1400/12/29" v-model="date_of_establishment" :rules="DateRules" />
-        </v-col>
+          <v-date-input label="تاریخ تاسیس" 
+          prepend-icon=""
+          ></v-date-input>
+                </v-col>
         <v-col cols="12" md="6">
           <v-text-field label="کدپستی" v-model="postal_code" />
         </v-col>
@@ -91,6 +97,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import jalali from 'dayjs-jalali';
 import InputPhoto from '@/components/InputPhoto.vue';
+import DatePicker from '@/components/DatePicker.vue';
 
 dayjs.extend(jalali);
 

@@ -2499,10 +2499,10 @@ vue-router@^4.0.11, vue-router@^4.3.0:
     "@vue/server-renderer" "3.4.25"
     "@vue/shared" "3.4.25"
 
-vuetify@^3.0.0, vuetify@^3.5.0:
-  version "3.5.17"
-  resolved "https://registry.npmjs.org/vuetify/-/vuetify-3.5.17.tgz"
-  integrity sha512-/Veklxxyu/l63q7QQOqJZeZukIKI2sBxY7FKMDcNup2KSGMjyjT+oYXy1DOdl7wlU3c3fKGQMFHqVWb0HDsyDw==
+vuetify@^3.0.0, vuetify@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/vuetify/-/vuetify-3.6.3.tgz"
+  integrity sha512-OBYYJYnNeUYA7kwrv8Rag1EBFbGWAQxJpp0s98U2KQ6SPU7MzzcrvNn7t69vcDbj7mR7Dcf9/jvFapfranXZvA==
 
 webpack-sources@^3.2.3:
   version "3.2.3"
