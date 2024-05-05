@@ -4,14 +4,12 @@
       v-model="fileList"
       :show-size="1000"
       label="بارگذاری عکس"
+      prepend-icon=""
+      prepend-inner-icon="$file"
       counter
       multiple
-      accept="image/png, image/jpeg, image/bmp, image/jpg"
-      prepend-inner-icon="$file"
-          prepend-icon=""
       @change="handleFileChange"
     >
-    <v-icon>mdi-paperclip</v-icon>
       <template v-slot:selection="{ fileNames }">  <!-- برای نمایش فایل‌ها -->
         <template v-for="(fileName, index) in fileNames" :key="fileName">
           <v-chip

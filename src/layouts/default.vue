@@ -66,7 +66,7 @@
 
 <script>
 import axios from 'axios';
-import { computed, reactive } from 'vue';
+import { reactive } from 'vue';
 import { useDisplay } from 'vuetify';
 import { api } from '@/config/api';
 // import logo from '../assets/Images/logo_mor'
@@ -85,15 +85,15 @@ export default {
               title: 'اشخاص',
               icon: 'mdi-account-multiple',
               items: [
-                { title: 'ثبت', icon: 'mdi-plus-box', route: 'People/People' },
-                { title: 'لیست', icon: 'mdi-folder-plus', route: 'People/ListPeople' },
+                { title: 'ثبت', icon: 'mdi-plus-box', route: 'Person/CreatePerson' },
+                { title: 'لیست', icon: 'mdi-folder-plus', route: 'Person/ListPerson' },
               ],
             },
             {
               title: 'پرسنلی',
               icon: 'mdi-card-account-details-outline',
               items: [
-                { title: 'ثبت', icon: 'mdi-plus-box', route: 'register/Personnel' },
+                { title: 'ثبت', icon: 'mdi-plus-box', route: 'Personnel/CreatePersonnel' },
                 { title: 'لیست', icon: 'mdi-folder-plus', route: 'Personnel/ListPersonnel' },
               ],
             },
@@ -101,8 +101,8 @@ export default {
               title: 'کاربران',
               icon: 'mdi-account-key',
               items: [
-                { title: 'ثبت', icon: 'mdi-plus-box', route: 'register/User' },
-                { title: 'لیست', icon: 'mdi-folder-plus', route: 'ListUsers' },
+                { title: 'ثبت', icon: 'mdi-plus-box', route: 'User/CreateUser' },
+                { title: 'لیست', icon: 'mdi-folder-plus', route: 'User/ListUser' },
               ],
             },
           ],

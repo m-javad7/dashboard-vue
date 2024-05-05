@@ -69,7 +69,7 @@ export default {
 
       try {
 
-        const response = await axios.post(api+'/api/login', {
+        const response = await axios.post('http://192.168.100.70:8888/api/login', {
           username: this.form.username,
           password: this.form.password,
         });
