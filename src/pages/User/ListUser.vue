@@ -66,6 +66,7 @@
 <script>
 import axios from 'axios';
 import SearchBar from '@/components/SearchBar.vue';
+import {api} from '@/config/api'
 
 export default {
   components: {

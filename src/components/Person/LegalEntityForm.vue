@@ -19,7 +19,7 @@
         <v-col cols="12" md="6">
           <v-text-field
             label="شناسه ملی"
-            v-model="company.national_code"
+            v-model="company.id_national"
             required
           />
         </v-col>
@@ -53,7 +53,7 @@
       </v-row>
     </v-form>
   </template>
-  
+
   <script>
   export default {
     props: {
@@ -64,4 +64,3 @@
     },
   };
   </script>
-  

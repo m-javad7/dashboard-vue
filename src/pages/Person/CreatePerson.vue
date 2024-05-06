@@ -1,22 +1,22 @@
 <template>
   <v-container>
     <v-row>
-      <v-radio-group v-model="type" row> <!-- تغییر به 'type' -->
+      <v-radio-group v-model="type" row>
         <v-radio label="حقیقی" value="1" />
         <v-radio label="حقوقی" value="0" />
-      </v-radio-group>   
+      </v-radio-group>
     </v-row>
-    
-      <NaturalPersonForm 
-        v-if="type == '1'" 
+
+      <NaturalPersonForm
+        v-if="type == '1'"
         :person="naturalPerson"
-      /> 
-      
-      <LegalEntityForm 
-        v-else 
+      />
+
+      <LegalEntityForm
+        v-else
         :company="legalEntity"
-      /> 
-    
+      />
+
     <v-btn @click="handleSubmit" color="primary">ثبت</v-btn>
 
     <v-snackbar v-model="snackbar" :timeout="3000" bottom>
@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import axios from 'axios'; // اضافه کردن axios
 import NaturalPersonForm from '@/components/Person/NaturalPersonForm.vue';
 import LegalEntityForm from '@/components/Person/LegalEntityForm.vue';
 
@@ -57,7 +56,7 @@ export default {
         phone_number: '',
         company_contact_name: '',
         company_contact_phone: '',
-        national_code: '',
+        id_national: '',
         economic_code: '',
         registration_number: '',
         postal_code: '',
@@ -73,7 +72,7 @@ export default {
     handleSubmit() {
       let data;
 
-      if (this.type == 1) { // تغییر به عدد
+      if (this.type == 1) {
         data = {
           type: this.type,
           ...this.naturalPerson,
@@ -85,16 +84,16 @@ export default {
         };
       }
 
-      axios.post('/people', data)
-      console.log(data)
+      this.$http.post('/people', data)
         .then((response) => {
           this.snackbarMessage = 'اطلاعات با موفقیت ثبت شد';
           this.snackbar = true;
         })
         .catch((error) => {
-          this.snackbarMessage = 'خطایی رخ داده است';
+          this.snackbarMessage = error.response.data.message || 'خطایی رخ داده است';
           this.snackbar = true;
         });
+      console.log(data)
     },
   },
 };

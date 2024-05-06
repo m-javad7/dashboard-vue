@@ -68,7 +68,6 @@
 import axios from 'axios';
 import { reactive } from 'vue';
 import { useDisplay } from 'vuetify';
-import { api } from '@/config/api';
 // import logo from '../assets/Images/logo_mor'
 export default {
   data() {
@@ -118,8 +117,8 @@ export default {
           title: 'واحدهای کاری',
           icon: 'mdi-office-building-marker-outline',
           items: [
-            { title: 'ثبت', icon: 'mdi-account-check', route: 'WorkUnits' },
-            { title: 'لیست', icon: 'mdi-list-status', route: 'ListUnits' },
+            { title: 'ثبت', icon: 'mdi-account-check', route: 'part/Listpart' },
+            { title: 'لیست', icon: 'mdi-list-status', route: 'Part/CreateList' },
           ],
         },
         {
@@ -162,7 +161,7 @@ export default {
     },
     async Logout() {
       try {
-        await axios.post(api + '/api/auth/logout');
+        await axios.post('http://192.168.100.70:8888/auth/logout');
         localStorage.removeItem('authToken');
         this.$router.push('/login');
       } catch (error) {
