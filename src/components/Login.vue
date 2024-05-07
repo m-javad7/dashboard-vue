@@ -1,8 +1,8 @@
 <template>
   <v-app class="back-login">
     <v-container class="fill-height d-flex justify-center align-center">
-      <v-card :width="400" class="pa-4 bg-blue-lighten-5 rounded-xl">
-        <v-card-title class="justify-center text-center font-weight-bold v-ma-2">سامانه مروارید</v-card-title>
+      <v-card :width="500" class="pa-5 bg-blue-lighten-5 rounded-xl">
+        <v-card-title class="justify-center text-center font-weight-bold v-ma-2 fontSize">سامانه مروارید</v-card-title>
         <v-card-text>
           <v-form ref="form" @keydown.enter="login" v-model="valid">
             <v-text-field
@@ -35,7 +35,6 @@
 
 <script>
 import axios from 'axios';
-import { api } from '@/config/api';
 
 export default {
   data() {
@@ -109,6 +108,9 @@ export default {
 </script>
 
 <style scoped>
+.fontSize{
+  font-size: 1.6rem;
+}
 .back-login {
   background-image: url('/src/assets/Images/back-login.webp');
   background-size: cover;

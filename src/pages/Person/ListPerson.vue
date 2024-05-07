@@ -1,12 +1,11 @@
 <template>
-  <div>
+  <v-container>
     <v-toolbar flat>
       <v-toolbar-title>لیست اشخاص و شرکت‌ها</v-toolbar-title>
       <v-spacer></v-spacer>
-      <SearchBar :query="searchQuery" @update:query="updateSearchQuery" class="mt-5 ml-2"/>
+      <SearchBar :query="searchQuery" @update:query="updateSearchQuery" class="mt-5 ml-2" />
     </v-toolbar>
 
-    <!-- نشانگر لودینگ -->
     <v-progress-circular
       v-if="loading"
       indeterminate
@@ -14,35 +13,30 @@
       class="mx-auto my-6"
     />
 
-    <!-- جدول داده‌ها -->
     <v-data-table
       v-else
       :headers="headers"
       :items="filteredEntities"
       item-value="id"
+      class="elevation-1"
     >
-      <!-- فیلد عملیات -->
       <template v-slot:item.actions="{ item }">
-        <v-icon @click="editItem(item)">mdi-pencil</v-icon> <!-- ویرایش -->
-        <v-icon @click="deleteItem(item)">mdi-delete</v-icon> <!-- حذف -->
+        <v-icon @click="editItem(item)">mdi-pencil</v-icon>
+        <v-icon @click="deleteItem(item)">mdi-delete</v-icon>
       </template>
-       <!-- نمایش نوع به عنوان حقیقی یا حقوقی -->
-       <template v-slot:item.type="{ item }">
-        {{ item.type ? 'حقیقی' : 'حقوقی' }}
+      <template v-slot:item.type="{ item }">
+        {{ item.type ? 'حقوقی' : 'حقیقی' }}
       </template>
     </v-data-table>
 
-    <!-- مودال ویرایش -->
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="text-h5">{{ formTitle }}</span>
+          <span class="text-h5">{{ dialogTitle }}</span>
         </v-card-title>
-
         <v-card-text>
           <v-container>
             <v-row>
-              <!-- فرم برای افراد حقیقی -->
               <v-col v-if="editedItem.type === true" cols="12">
                 <v-text-field
                   v-model="editedItem.first_name"
@@ -61,10 +55,9 @@
                   label="شماره شناسنامه"
                 />
                 <v-date-input
-          label="تاریخ تولد"
-          prepend-icon=""
-          prepend-inner-icon="$calendar"
-          />
+                  v-model="editedItem.birth_date"
+                  label="تاریخ تولد"
+                />
                 <v-text-field
                   v-model="editedItem.address"
                   label="آدرس"
@@ -77,21 +70,12 @@
                   v-model="editedItem.phone_number"
                   label="موبایل"
                 />
-                <v-file-input
-                 label="بار گذاری تصویر"
-                 v-model="image"
-                 ></v-file-input>
               </v-col>
 
-              <!-- فرم برای شرکت‌ها -->
               <v-col v-else-if="editedItem.type === false" cols="12">
                 <v-text-field
                   v-model="editedItem.company_name"
                   label="نام شرکت"
-                />
-                <v-text-field
-                  v-model="editedItem.phone_number"
-                  label="شماره تماس"
                 />
                 <v-text-field
                   v-model="editedItem.ceo_name"
@@ -110,20 +94,12 @@
                   label="کد اقتصادی"
                 />
                 <v-text-field
-                  v-model="editedItem.national_code"
-                  label="شناسه ملی"
-                />
-                <v-text-field
                   v-model="editedItem.registration_number"
                   label="شماره ثبت شرکت"
                 />
                 <v-text-field
                   v-model="editedItem.date_of_establishment"
                   label="تاریخ تاسیس"
-                />
-                <v-text-field
-                  v-model="editedItem.postal_code"
-                  label="کدپستی"
                 />
                 <v-text-field
                   v-model="editedItem.address"
@@ -133,7 +109,6 @@
             </v-row>
           </v-container>
         </v-card-text>
-
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue-darken-1" @click="closeDialog">لغو</v-btn>
@@ -142,13 +117,11 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </div>
+  </v-container>
 </template>
 
 <script>
 import SearchBar from '@/components/SearchBar.vue';
-import { api } from '@/config/api';
-import axios from 'axios';
 
 export default {
   components: {
@@ -158,8 +131,10 @@ export default {
     return {
       loading: true,
       dialog: false,
+      dialogTitle: '',
       searchQuery: '',
       headers: [
+        { text: 'ردیف', value: 'id' },
         { text: 'نام', value: 'first_name' },
         { text: 'نام خانوادگی', value: 'last_name' },
         { text: 'نوع', value: 'type' },
@@ -167,10 +142,11 @@ export default {
         { text: 'کد اقتصادی', value: 'economic_code' },
         { text: 'عملیات', value: 'actions', sortable: false },
       ],
-      entities: [],
-      editedIndex: -1,
+      entities: [], // آرایه برای ذخیره داده‌ها
+      editedIndex: -1, // شاخص آیتم در حال ویرایش
       editedItem: {
-        type: null, // نوع آیتم
+        type: null, // نوع آیتم (حقیقی یا حقوقی)
+        id: '',
         first_name: '',
         last_name: '',
         national_code: '',
@@ -179,8 +155,7 @@ export default {
         address: '',
         postal_code: '',
         phone_number: '',
-        image: [],
-        // داده‌های برای فرد حقوقی
+        // برای شرکت‌ها
         company_name: '',
         ceo_name: '',
         company_contact_name: '',
@@ -197,88 +172,87 @@ export default {
       const query = this.searchQuery.toLowerCase();
       return this.entities.filter((item) => {
         return (
-          item.first_name.toLowerCase().includes(query) ||
-          item.last_name.toLowerCase().includes(query) ||
-          (item.national_code && item.national_code.toLowerCase().includes(query))
+          (item.first_name?.toLowerCase().includes(query)) ||
+          (item.last_name?.toLowerCase().includes(query)) ||
+          (item.national_code?.toLowerCase().includes(query))
         );
       });
     },
   },
 
-
   mounted() {
-    axios
-    this.$http.get('/people')
-      .then((response) => {
-        this.entities = response.data; // ذخیره داده‌ها
-        this.loading = false; // پایان لودینگ
-      })
-      .catch((error) => {
-        console.error('خطا در دریافت داده‌ها:', error); // مدیریت خطا
-        this.loading = false; // توقف لودینگ حتی در صورت خطا
-      });
+    this.fetchEntities(); // واکشی داده‌ها هنگام نصب کامپوننت
   },
 
   methods: {
-    updateSearchQuery(newQuery) {
-      this.searchQuery = newQuery; // به‌روزرسانی مقدار جستجو
+    fetchEntities() {
+      this.$http.get('/people') // درخواست داده‌ها از سرور
+        .then((response) => {
+          this.entities = Array.isArray(response.data.data) ? response.data.data : [];
+          this.loading = false;
+        })
+        .catch((error) => {
+          console.error('خطا در دریافت داده‌ها:', error);
+          this.loading = false;
+          this.entities = []; // توقف لودینگ و مقداردهی آرایه خالی در صورت خطا
+        });
     },
-    editItem(item) {
-      this.editedIndex = this.entities.indexOf(item); // موقعیت آیتم
-      this.editedItem = { ...item };  // کپی آیتم برای ویرایش
-      this.dialog = true; // باز کردن مودال
-    },
-    deleteItem(item) {
-    // نمایش تاییدیه قبل از حذف
-    const confirmDelete = confirm("آیا از حذف این آیتم مطمئن هستید؟");
-    if (!confirmDelete) {
-      return; // اگر کاربر تایید نکرد، از متد خارج شوید
-    }
 
-    // ارسال درخواست DELETE
-    axios
-    this.$http.delete(`/people/${item.id}`)
+    editItem(item) {
+      this.$http.get(`/people/${item.id}`) // دریافت داده‌های آیتم برای ویرایش
+        .then((response) => {
+          this.editedItem = response.data; // داده‌های دریافت‌شده را در ویرایش قرار دهید
+          this.dialogTitle = 'ویرایش'; // عنوان مودال
+          this.dialog = true; // باز کردن مودال
+        })
+        .catch((error) => {
+          console.error('خطا در دریافت داده‌ها:', error);
+        });
+    },
+
+    deleteItem(item) {
+      const confirmDelete = confirm("آیا از حذف این آیتم مطمئن هستید؟");
+      if (!confirmDelete) return;
+
+      this.$http.delete(`/people/${item.id}`) // درخواست حذف به سرور
+        .then(() => {
+          const index = this.entities.indexOf(item);
+          if (index !== -1) {
+            this.entities.splice(index, 1); // حذف آیتم از آرایه
+          }
+        })
+        .catch((error) => {
+          console.error('خطا در حذف آیتم:', error);
+        });
+    },
+
+    closeDialog() {
+      this.dialog = false;
+    },
+
+    save() {
+  if (this.editedItem && this.editedItem.id) {
+    const url = `/people/${this.editedItem.id}`; // آدرس برای ویرایش آیتم موجود
+
+    this.$http.put(url, this.editedItem) // ارسال درخواست PUT برای ویرایش
       .then((response) => {
-        // حذف آیتم از لیست
-        const index = this.entities.indexOf(item);
-        if (index !== -1) {
-          this.entities.splice(index, 1);
-        }
+        Object.assign(this.entities[this.editedIndex], response.data); // به‌روزرسانی آیتم موجود
+        this.dialog = false; // بستن مودال
       })
       .catch((error) => {
-        console.error('خطا در حذف آیتم:', error);
+        console.error('خطا در ویرایش آیتم:', error); // مدیریت خطا
       });
-  },
-
-  save() {
-    const url = this.editedIndex === -1
-      ? this.$http +'/people'  // اگر آیتم جدید است
-      : this.$http +`/people/${this.editedItem.id}`;  // اگر آیتم موجود است
-
-    const method = this.editedIndex === -1 ? 'post' : 'put'; // تعیین نوع درخواست
-
-    axios({
-      method,
-      url,
-      data: this.editedItem,  // داده‌هایی که به سرور ارسال می‌کنید
-    })
-    .then((response) => {
-      if (this.editedIndex === -1) {
-        this.entities.push(response.data); // اگر آیتم جدید است، آن را به لیست اضافه کنید
-      } else {
-        Object.assign(this.entities[this.editedIndex], response.data); // اگر آیتم موجود است، آن را به‌روزرسانی کنید
-      }
-      this.dialog = false; // بستن مودال
-    })
-    .catch((error) => {
-      console.error('خطا در ذخیره آیتم:', error);
-    });
-  },
-    closeDialog() {
-      this.dialog = false; // بستن مودال
-    },
+  } else {
+    console.error('آیتم یا شناسه آن معتبر نیست'); // مدیریت خطای ناشی از آیتم نامعتبر
+  }
+}
 
   },
-
 };
 </script>
+
+<style scoped>
+.v-toolbar {
+  padding:
+ }
+ </style>

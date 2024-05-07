@@ -1,135 +1,132 @@
 <template>
   <v-container>
-    <!-- قسمت جستجو -->
-    <v-row class="justify-center">
-      <v-col cols="12" md="6">
-        <v-autocomplete
-          v-model="selectedPerson"
-          :items="personnelList"
-          item-text="name"
-          item-value="id"
-          label="🔎 جستجوی پرسنل"
-          @change="fetchPersonDetails"
-          outlined
-          dense
-        ></v-autocomplete>
+    <v-row>
+      <v-col>
+        <v-text-field
+          v-model="first_name"
+          label="نام"
+        ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field
+          v-model="last_name"
+          label="نام خانوادگی"
+        ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field
+          v-model="national_code"
+          label="کد ملی"
+        ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-btn color="primary" @click="search">جستجو</v-btn>
       </v-col>
     </v-row>
 
-    <!-- قسمت ورودی کد ملی و کد پرسنلی -->
-    <v-row class="d-flex flex-column align-center">
-      <v-col cols="12" md="6">
+    <v-data-table
+      :headers="headers"
+      :items="Array.isArray(results) ? results : []"
+      item-value="id"
+      item-key="id"
+      hide-default-footer
+    >
+      <template v-slot:item.unit="{ item }">
+        <v-text-field v-model="item.unit"></v-text-field>
+      </template>
+
+      <template v-slot:item.start_date="{ item }">
         <v-text-field
-          v-model="nationalCode"
-          label="کد ملی"
-          outlined
-          dense
-          readonly
+          v-model="item.start_date"
+          label="تاریخ شروع کار"
         ></v-text-field>
-      </v-col>
-      <v-col cols="12" md="6">
+      </template>
+
+      <template v-slot:item.end_date="{ item }">
         <v-text-field
-          v-model="personnelCode"
-          label="کد پرسنلی"
-          outlined
-          dense
-          :rules="[required]"
+          v-model="item.end_date"
+          label="تاریخ ترک کار"
         ></v-text-field>
+      </template>
+
+      <template v-slot:item.status="{ item }">
+        <v-select
+          v-model="item.status"
+          :items="['فعال', 'غیرفعال']"
+          label="وضعیت"
+        ></v-select>
+      </template>
+    </v-data-table>
+
+    <v-row>
+      <v-col>
+        <v-btn color="primary" @click="submitChanges">ارسال تغییرات</v-btn>
       </v-col>
-      <v-btn color="primary" class="w-25" @click="submitPersonnelCode">ثبت</v-btn>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import axios from 'axios';
-import { api } from '@/config/api'; // اطمینان حاصل کنید که api به درستی تعریف شده است
-
 export default {
   data() {
     return {
-      selectedPerson: null,
-      personnelList: [],
-      nationalCode: '',
-      personnelCode: '',
+      first_name: '',
+      last_name: '',
+      national_code: '',
+      results: [],
+      headers: [
+        { text: 'نام', value: 'first_name' },
+        { text: 'نام خانوادگی', value: 'last_name' },
+        { text: 'کد ملی', value: 'national_code' },
+        { text: 'واحد کاری', value: 'unit' },
+        { text: 'تاریخ شروع کار', value: 'start_date' },
+        { text: 'تاریخ ترک کار', value: 'end_date' },
+        { text: 'وضعیت', value: 'status' },
+      ],
     };
   },
   methods: {
-    async fetchPersonDetails() {
-      if (!this.selectedPerson) return; // اطمینان حاصل کنید که یک فرد انتخاب شده است
+    async search() {
+      const params = {};
 
-      try {
-        const response = await axios.get(`${api}/api/personnel/${this.selectedPerson}`, {
-          headers: {
-            authorization: 'Bearer ' + localStorage.getItem('authToken'),
-            Accept: 'application/json',
-          },
-        });
-
-        const person = response.data;
-        this.nationalCode = person.national_code;  // کد ملی را از پاسخ بگیرید
-        this.personnelCode = '';  // کد پرسنلی را خالی کنید تا کاربر بتواند وارد کند
-      } catch (error) {
-        console.error('خطا در دریافت اطلاعات پرسنل:', error);
+      if (this.first_name) {
+        params.first_name = this.first_name;
       }
-    },
-    async submitPersonnelCode() {
-      if (!this.selectedPerson || !this.personnelCode) {
-        return; // اطمینان حاصل کنید که کد پرسنلی وارد شده است
+      if (this.last_name) {
+        params.last_name = this.last_name;
+      }
+      if (this.national_code) {
+        params.national_code = this.national_code;
       }
 
       try {
-        const response = await axios.put(
-          `${api}/api/personnel/${this.selectedPerson}`,
-          { personnel_code: this.personnelCode },  // ارسال کد پرسنلی جدید
-          {
-            headers: {
-              authorization: 'Bearer ' + localStorage.getItem('authToken'),
-              Accept: 'application/json',
-            },
-          }
-        );
+        const response = await this.$http.get('/get/personal/code', { params });
 
-        console.log('کد پرسنلی با موفقیت ثبت شد:', response.data);
+        if (Array.isArray(response.data)) {
+          this.results = response.data;
+          console.log()
+        } else {
+          console.error('Expected an array but got:', response.data);
+          this.results = []; // reset if data is invalid
+        }
       } catch (error) {
-        console.error('خطا در ثبت کد پرسنلی:', error);
+        console.error('Error fetching data:', error);
+        this.results = []; // reset on error
       }
     },
-    required(value) {
-      return value ? true : "کد پرسنلی باید اختصاص داده شود!";
-    },
-  },
-  mounted() {
-    this.fetchPersonnelList();  // دریافت لیست پرسنل
-  },
-  async fetchPersonnelList() {
-    try {
-      const response = await axios.get(`${api}/api/people`, {
-        headers: {
-          authorization: 'Bearer ' + localStorage.getItem('authToken'),
-          Accept: 'application/json',
-        },
-      });
 
-      this.personnelList = response.data.map(person => {
-        return {
-          name: `${person.first_name} ${person.last_name}`,  // ترکیب نام و نام خانوادگی
-          id: person.id,  // استفاده به عنوان شناسه
-        };
-      });
-    } catch (error) {
-      console.error('خطا در دریافت لیست پرسنل:', error);
-    }
+    async submitChanges() {
+      try {
+        await this.$http.post('/update/personal/code', { results: this.results });
+        console.log('Changes submitted successfully');
+      } catch (error) {
+        console.error('Error in submitting changes:', error);
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
-.v-container {
-  padding-top: 20px;
-}
-
-.v-text-field {
-  font-weight: bold;
-}
+/* Add custom styles if needed */
 </style>
