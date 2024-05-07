@@ -4,7 +4,7 @@
 import axios from 'axios';
 
 export const api= axios.create({
-  baseURL: 'http://192.168.100.70:8888/api',
+  baseURL: 'https://6637a9cc288fedf69380f762.mockapi.io/people',
   headers: {
     'authorization': 'Bearer ' + localStorage.getItem('authToken'),
     'Accept': 'application/json',

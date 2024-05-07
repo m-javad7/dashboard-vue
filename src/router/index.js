@@ -34,19 +34,19 @@ const router = createRouter({
   ],
 });
 
-// Navigation Guard برای بررسی احراز هویت
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('authToken'); // بررسی توکن
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!isAuthenticated) {
-      // اگر مسیر نیاز به احراز هویت دارد و کاربر لاگین نشده، به لاگین هدایت شود
-      next('/login');
-    } else {
-      next(); // اگر کاربر لاگین شده، ادامه دهید
-    }
-  } else {
-    next(); // اگر مسیر نیازی به احراز هویت ندارد، ادامه دهید
-  }
-});
+// // Navigation Guard برای بررسی احراز هویت
+// router.beforeEach((to, from, next) => {
+//   const isAuthenticated = localStorage.getItem('authToken'); // بررسی توکن
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (!isAuthenticated) {
+//       // اگر مسیر نیاز به احراز هویت دارد و کاربر لاگین نشده، به لاگین هدایت شود
+//       next('/login');
+//     } else {
+//       next(); // اگر کاربر لاگین شده، ادامه دهید
+//     }
+//   } else {
+//     next(); // اگر مسیر نیازی به احراز هویت ندارد، ادامه دهید
+//   }
+// });
 
 export default router;
