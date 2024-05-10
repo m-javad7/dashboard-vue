@@ -52,6 +52,9 @@
 
 <script>
 export default {
+  meta: {
+    layout: 'ProductLayout', // استفاده از لایوت سفارشی
+  },
   data() {
     return {
       locations: [],

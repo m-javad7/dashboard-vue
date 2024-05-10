@@ -56,11 +56,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main>
-      <v-container fluid>
-        <router-view />
-      </v-container>
-    </v-main>
+   
   </v-app>
 </template>
 
@@ -84,24 +80,24 @@ export default {
               title: 'اشخاص',
               icon: 'mdi-account-multiple',
               items: [
-                { title: 'ثبت', icon: 'mdi-plus-box', route: 'Person/CreatePerson' },
-                { title: 'لیست', icon: 'mdi-folder-plus', route: 'Person/ListPerson' },
+                { title: 'ثبت', icon: 'mdi-account-check', route: 'Person/CreatePerson' },
+                { title: 'لیست', icon: 'mdi-list-status', route: 'Person/ListPerson' },
               ],
             },
             {
               title: 'پرسنلی',
               icon: 'mdi-card-account-details-outline',
               items: [
-                { title: 'ثبت', icon: 'mdi-plus-box', route: 'Personnel/CreatePersonnel' },
-                { title: 'لیست', icon: 'mdi-folder-plus', route: 'Personnel/ListPersonnel' },
+                { title: 'ثبت', icon: 'mdi-account-check', route: 'Personnel/CreatePersonnel' },
+                { title: 'لیست', icon: 'mdi-list-status', route: 'Personnel/ListPersonnel' },
               ],
             },
             {
               title: 'کاربران',
               icon: 'mdi-account-key',
               items: [
-                { title: 'ثبت', icon: 'mdi-plus-box', route: 'User/CreateUser' },
-                { title: 'لیست', icon: 'mdi-folder-plus', route: 'User/ListUser' },
+                { title: 'ثبت', icon: 'mdi-account-check', route: 'User/CreateUser' },
+                { title: 'لیست', icon: 'mdi-list-status', route: 'User/ListUser' },
               ],
             },
           ],
@@ -132,8 +128,8 @@ export default {
               title: 'گروه‌های دسترسی',
               icon: 'mdi-folder',
               items: [
-                { title: 'ایجاد', icon: 'mdi-plus-box', route: 'AccessGroups' },
-                { title: 'انتساب', icon: 'mdi-folder-plus', route: 'Attribution' },
+                { title: 'ایجاد', icon: 'mdi-account-check', route: 'AccessGroups' },
+                { title: 'انتساب', icon: 'mdi-list-status', route: 'Attribution' },
               ],
             },
           ],

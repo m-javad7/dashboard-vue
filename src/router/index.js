@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { setupLayouts } from 'virtual:generated-layouts';
 import generatedRoutes from 'virtual:generated-pages';
 
+
 // مسیر لاگین
 const loginRoute = {
   path: '/login',
@@ -9,6 +10,10 @@ const loginRoute = {
   component: () => import('@/components/Login.vue'),
 };
 
+const production = {
+  name: 'production',
+  component: ()=> import ('@/pages/production/s/test.vue')
+};
 // مسیر 404
 const notFoundRoute = {
   path: '/:pathMatch(.*)*',
