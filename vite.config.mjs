@@ -55,15 +55,48 @@ export default defineConfig({
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/api\.example\.com\/.*$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 7, // 1 week
+              },
+              networkTimeoutSeconds: 10 // انتظار ۱۰ ثانیه برای شبکه قبل از استفاده از کش
+            }
+          }
+        ],
+        
+        registerType: 'prompt', // درخواست از کاربر برای به‌روزرسانی سرویس‌ورکر
+  strategies: 'generateSW', // استفاده از Workbox برای ساخت سرویس‌ورکر
+  workbox: {
+    cleanupOutdatedCaches: true, // پاک کردن کش‌های قدیمی
+  },
+  onRegisterSW: ({ update }) => {
+    update(); // اجرای آپدیت به صورت دستی
+  },
+  onUpdateReady: () => {
+    const updateServiceWorker = confirm('New version available. Update now?');
+    if (updateServiceWorker) {
+      update();
+    }
+  },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,png}'], // فایل‌هایی که باید از پیش کش شوند
+          globDirectory: 'dist', // دایرکتوری مربوط به فایل‌ها
+        },
         screenshots: [
           {
-            src: 'screenshot1.png',
+            src: '@/assets/Images/4.png',
             sizes: '640x480',
             type: 'image/png',
             form_factor: 'narrow'
           },
           {
-            src: 'screenshot2.png',
+            src: '@/assets/Images/4.png',
             sizes: '1280x720',
             type: 'image/png',
             form_factor: 'wide'
@@ -86,7 +119,9 @@ export default defineConfig({
             type: 'image/png',
             purpose: 'any maskable',
           }
-        ]
+        ],  
+          prefer_related_applications: true // در صورت وجود برنامه بومی، پیشنهاد نصب آن داده می‌شود
+
       }
     })
   ],
