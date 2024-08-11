@@ -9,7 +9,6 @@ import VueRouter from 'unplugin-vue-router/vite'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import Pages from 'vite-plugin-pages'
 import { VitePWA } from 'vite-plugin-pwa' // اضافه کردن پلاگین PWA
-
 export default defineConfig({
   plugins: [
     VueRouter(),
@@ -55,6 +54,39 @@ export default defineConfig({
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',
+        icons: [
+          {
+            src: './src/assets/Images/4.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: './src/assets/Images/4.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
+          }
+        ],
+        screenshots: [
+          {
+            src: './src/assets/Images/4.png',
+            sizes: '640x480',
+            type: 'image/png',
+            form_factor: 'narrow'
+          },
+          {
+            src: './assets/Images/4.png',
+            sizes: '1280x720',
+            type: 'image/png',
+            form_factor: 'wide'
+          }
+        ],
+        prefer_related_applications: true // در صورت وجود برنامه بومی، پیشنهاد نصب آن داده می‌شود
+      },
+      workbox: {
+        cleanupOutdatedCaches: true, // پاک کردن کش‌های قدیمی
+        globPatterns: ['**/*.{js,css,html,png}'], // فایل‌هایی که باید از پیش کش شوند
+        globDirectory: 'dist', // دایرکتوری مربوط به فایل‌ها
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/api\.example\.com\/.*$/,
@@ -69,60 +101,17 @@ export default defineConfig({
             }
           }
         ],
-        
-        registerType: 'prompt', // درخواست از کاربر برای به‌روزرسانی سرویس‌ورکر
-  strategies: 'generateSW', // استفاده از Workbox برای ساخت سرویس‌ورکر
-  workbox: {
-    cleanupOutdatedCaches: true, // پاک کردن کش‌های قدیمی
-  },
-  onRegisterSW: ({ update }) => {
-    update(); // اجرای آپدیت به صورت دستی
-  },
-  onUpdateReady: () => {
-    const updateServiceWorker = confirm('New version available. Update now?');
-    if (updateServiceWorker) {
-      update();
-    }
-  },
-        workbox: {
-          globPatterns: ['**/*.{js,css,html,png}'], // فایل‌هایی که باید از پیش کش شوند
-          globDirectory: 'dist', // دایرکتوری مربوط به فایل‌ها
-        },
-        screenshots: [
-          {
-            src: '@/assets/Images/4.png',
-            sizes: '640x480',
-            type: 'image/png',
-            form_factor: 'narrow'
-          },
-          {
-            src: '@/assets/Images/4.png',
-            sizes: '1280x720',
-            type: 'image/png',
-            form_factor: 'wide'
-          }
-        ],
-        icons: [
-          {
-            src: '@/assets/Images/4.png',
-            sizes: '192x192',
-            type: 'image/png',
-          },
-          {
-            src: '@/assets/Images/4.png',
-            sizes: '512x512',
-            type: 'image/png',
-          },
-          {
-            src: '@/assets/Images/4.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable',
-          }
-        ],  
-          prefer_related_applications: true // در صورت وجود برنامه بومی، پیشنهاد نصب آن داده می‌شود
-
-      }
+      },
+      // تنظیمات مربوط به به‌روزرسانی سرویس‌ورکر
+      onRegisterSW: ({ update }) => {
+        update(); // اجرای آپدیت به صورت دستی
+      },
+      onUpdateReady: () => {
+        const updateServiceWorker = confirm('New version available. Update now?');
+        if (updateServiceWorker) {
+          update();
+        }
+      },
     })
   ],
   define: { 'process.env': {} },
