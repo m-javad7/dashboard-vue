@@ -55,6 +55,20 @@ export default defineConfig({
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',
+        screenshots: [
+          {
+            src: 'screenshot1.png',
+            sizes: '640x480',
+            type: 'image/png',
+            form_factor: 'narrow'
+          },
+          {
+            src: 'screenshot2.png',
+            sizes: '1280x720',
+            type: 'image/png',
+            form_factor: 'wide'
+          }
+        ],
         icons: [
           {
             src: '@/assets/Images/4.png',
